@@ -50,6 +50,8 @@ int velocity =100;
 int state = 4;
 int status = 0;
 int press =0;
+int last =2;
+int current = 2;
 
 /* USER CODE END PV */
 
@@ -143,6 +145,7 @@ int main(void)
 	  else if (status == 0){
 		  OFF();
 	  }
+	  Button();
 
 
 
@@ -345,7 +348,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 
 				state = 0;
 			}
-			else if (state == 0 && RxBuffer[0]!='0'&& RxBuffer[0]!='1'&& RxBuffer[0]!='a'&& RxBuffer[0]!='d'&& RxBuffer[0]!='s'&& RxBuffer[0]!='x')
+			else if (state == 1 && RxBuffer[0]!='0'&& RxBuffer[0]!='1'&& RxBuffer[0]!='a'&& RxBuffer[0]!='d'&& RxBuffer[0]!='s'&& RxBuffer[0]!='x')
 			{
 				state = 3;
 			}
@@ -371,7 +374,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 
 				state = 0;
 			}
-			else if (state == 0 && RxBuffer[0]!='0'&& RxBuffer[0]!='1'&& RxBuffer[0]!='a'&& RxBuffer[0]!='d'&& RxBuffer[0]!='s'&& RxBuffer[0]!='x')
+			else if (state == 2 && RxBuffer[0]!='0'&& RxBuffer[0]!='1'&& RxBuffer[0]!='a'&& RxBuffer[0]!='d'&& RxBuffer[0]!='s'&& RxBuffer[0]!='x')
 			{
 				state = 3;
 			}
@@ -406,7 +409,19 @@ void OFF()
 	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, RESET);
 
 }
-
+void Button()
+{
+	current = HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13);
+	if(last == 1 && current == 0){
+		sprintf((char*)TxBuffer,"\r\n Press : %s\r\n",RxBuffer);
+		HAL_UART_Transmit_IT(&huart2, TxBuffer, strlen((char*)TxBuffer));
+	}
+	else if(last == 0 && current == 1){
+		sprintf((char*)TxBuffer,"\r\n UnPress : %s\r\n",RxBuffer);
+		HAL_UART_Transmit_IT(&huart2, TxBuffer, strlen((char*)TxBuffer));
+	}
+	last = current;
+}
 /* USER CODE END 4 */
 
 /**
