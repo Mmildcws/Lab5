@@ -4,6 +4,6 @@
 ../Core/Src/main.c:238:13:MX_GPIO_Init	48	static
 ../Core/Src/main.c:267:6:UARTInterruptConfig	8	static
 ../Core/Src/main.c:272:6:HAL_UART_RxCpltCallback	16	static
-../Core/Src/main.c:399:6:ON	8	static
-../Core/Src/main.c:409:6:OFF	8	static
-../Core/Src/main.c:420:6:Error_Handler	4	static,ignoring_inline_asm
+../Core/Src/main.c:394:6:ON	8	static
+../Core/Src/main.c:404:6:OFF	8	static
+../Core/Src/main.c:416:6:Error_Handler	4	static,ignoring_inline_asm

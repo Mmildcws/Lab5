@@ -290,8 +290,6 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 		{
 		case 0 :
 
-//			sprintf((char*)TxBuffer,"\r\n Please select menu :\n \r\n 0 for  LED Control\n \r\n 1 for Button Status\n",RxBuffer);
-//			HAL_UART_Transmit_IT(&huart2, TxBuffer, strlen((char*)TxBuffer));
 
 			if (state==0 && RxBuffer[0] == '0')
 			{
@@ -301,16 +299,16 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 			{
 				state =2;
 			}
-//			else{
-//				state = 3;
-//			}
+			else if (state == 0 && RxBuffer[0]!='0'&& RxBuffer[0]!='1'&& RxBuffer[0]!='a'&& RxBuffer[0]!='d'&& RxBuffer[0]!='s'&& RxBuffer[0]!='x')
+			{
+				state = 3;
+			}
 			//HAL_UART_Receive_IT(&huart2, RxBuffer, 1);
 			break;
 
 			// LED Control
 		case 1 :
-//			sprintf((char*)TxBuffer,"\r\n LED Control : %s\r\n Select Functions \r\n a:SpeedUp+1Hz s:SpeedDown-1Hz d:On/off x:back\n",RxBuffer);
-//			HAL_UART_Transmit_IT(&huart2, TxBuffer, strlen((char*)TxBuffer));
+
 			if(state==1 && RxBuffer[0]=='a')
 			{
 				sprintf((char*)TxBuffer,"\r\n SpeedUp 1Hz : %s\r\n",RxBuffer);
@@ -344,46 +342,43 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 			}
 			else if(state==1 && RxBuffer[0]=='x')
 			{
-//				sprintf((char*)TxBuffer,"\r\n Back : %s\r\n",RxBuffer);
-//				HAL_UART_Transmit_IT(&huart2, TxBuffer, strlen((char*)TxBuffer));
+
 				state = 0;
 			}
-//			else
-//			{
-//				state = 3;
-//			}
+			else if (state == 0 && RxBuffer[0]!='0'&& RxBuffer[0]!='1'&& RxBuffer[0]!='a'&& RxBuffer[0]!='d'&& RxBuffer[0]!='s'&& RxBuffer[0]!='x')
+			{
+				state = 3;
+			}
 			//HAL_UART_Receive_IT(&huart2, RxBuffer, 1);
 			break;
 
 			//Button Status
 		case 2:
-
-//			sprintf((char*)TxBuffer,"\r\n Button Status: %s\r\nSelect Functions\n x:back statusButton\n",RxBuffer);
-//			HAL_UART_Transmit_IT(&huart2, TxBuffer, strlen((char*)TxBuffer));
-			if(RxBuffer[0]=='m')
-			{
-				sprintf((char*)TxBuffer,"\r\n Press : %s\r\n",RxBuffer);
-				HAL_UART_Transmit_IT(&huart2, TxBuffer, strlen((char*)TxBuffer));
-
-			}
-			else if(RxBuffer[0]=='x')
-			{
-//				sprintf((char*)TxBuffer,"\r\n Back : %s\r\n",RxBuffer);
+			//RxBuffer[0] = HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13);
+//
+//			if(RxBuffer[0]=='1')
+//			{
+//				sprintf((char*)TxBuffer,"\r\n Press : %s\r\n",RxBuffer);
 //				HAL_UART_Transmit_IT(&huart2, TxBuffer, strlen((char*)TxBuffer));
+//			}
+//			else if(RxBuffer[0]=='0')
+//			{
+//				sprintf((char*)TxBuffer,"\r\n UnPress : %s\r\n",RxBuffer);
+//				HAL_UART_Transmit_IT(&huart2, TxBuffer, strlen((char*)TxBuffer));
+//			}
+			if(RxBuffer[0]=='x')
+			{
+
 				state = 0;
 			}
-//			else
-//			{
-//				state = 3;
-//			}
-			//HAL_UART_Receive_IT(&huart2, RxBuffer, 1);
+			else if (state == 0 && RxBuffer[0]!='0'&& RxBuffer[0]!='1'&& RxBuffer[0]!='a'&& RxBuffer[0]!='d'&& RxBuffer[0]!='s'&& RxBuffer[0]!='x')
+			{
+				state = 3;
+			}
 			break;
 
 		case 3 :
 
-//			sprintf((char*)TxBuffer,"\r\n No menu : %s\r\n",RxBuffer);
-//			HAL_UART_Transmit_IT(&huart2, TxBuffer, strlen((char*)TxBuffer));
-			//HAL_UART_Receive_IT(&huart2, RxBuffer, 1);
 			state = 0;
 
 			//HAL_UART_Receive_IT(&huart2, RxBuffer, 1);
@@ -411,6 +406,7 @@ void OFF()
 	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, RESET);
 
 }
+
 /* USER CODE END 4 */
 
 /**
