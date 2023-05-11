@@ -64,6 +64,7 @@ void ControlLED();
 void UARTInterruptConfig();
 void ON();
 void OFF();
+void Button();
 
 /* USER CODE END PFP */
 
@@ -135,7 +136,7 @@ int main(void)
 		  press = 1;
 	  }
 	  else if(state ==3 && press == 0){
-		  sprintf((char*)TxBuffer,"\r\n No Menu : %s\r\n",RxBuffer);
+		  sprintf((char*)TxBuffer,"\r\n No Menu : %s\r\n \n Please Select Menu :\r\n 0 for  LED Control \r\n 1 for Button Status\n",RxBuffer);
 		  HAL_UART_Transmit_IT(&huart2, TxBuffer, strlen((char*)TxBuffer));
 		  press = 1;
 	  }
@@ -292,8 +293,6 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 		switch (state)
 		{
 		case 0 :
-
-
 			if (state==0 && RxBuffer[0] == '0')
 			{
 				state =1;
@@ -352,23 +351,11 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 			{
 				state = 3;
 			}
-			//HAL_UART_Receive_IT(&huart2, RxBuffer, 1);
 			break;
 
 			//Button Status
 		case 2:
-			//RxBuffer[0] = HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13);
-//
-//			if(RxBuffer[0]=='1')
-//			{
-//				sprintf((char*)TxBuffer,"\r\n Press : %s\r\n",RxBuffer);
-//				HAL_UART_Transmit_IT(&huart2, TxBuffer, strlen((char*)TxBuffer));
-//			}
-//			else if(RxBuffer[0]=='0')
-//			{
-//				sprintf((char*)TxBuffer,"\r\n UnPress : %s\r\n",RxBuffer);
-//				HAL_UART_Transmit_IT(&huart2, TxBuffer, strlen((char*)TxBuffer));
-//			}
+
 			if(RxBuffer[0]=='x')
 			{
 
@@ -381,8 +368,20 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 			break;
 
 		case 3 :
+			//state = 0;
 
-			state = 0;
+			if (state==0 && RxBuffer[0] == '0')
+			{
+				state =1;
+			}
+			else if (state==0 &&RxBuffer[0] == '1')
+			{
+				state =2;
+			}
+			else if (state == 0 &&  RxBuffer[0]!='x')
+			{
+				state = 3;
+			}
 
 			//HAL_UART_Receive_IT(&huart2, RxBuffer, 1);
 		break;
@@ -413,11 +412,11 @@ void Button()
 {
 	current = HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13);
 	if(last == 1 && current == 0){
-		sprintf((char*)TxBuffer,"\r\n Press : %s\r\n",RxBuffer);
+		sprintf((char*)TxBuffer,"\r\n Press\r\n",RxBuffer);
 		HAL_UART_Transmit_IT(&huart2, TxBuffer, strlen((char*)TxBuffer));
 	}
 	else if(last == 0 && current == 1){
-		sprintf((char*)TxBuffer,"\r\n UnPress : %s\r\n",RxBuffer);
+		sprintf((char*)TxBuffer,"\r\n UnPress\r\n",RxBuffer);
 		HAL_UART_Transmit_IT(&huart2, TxBuffer, strlen((char*)TxBuffer));
 	}
 	last = current;
